@@ -1,0 +1,9 @@
+build/
+bin/
+layout/
+*.hex
+*.elf
+*.o
+arduino_secrets.h
+key
+key.pub
