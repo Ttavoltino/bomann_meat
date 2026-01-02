@@ -117,34 +117,19 @@ void loop() {
 
 void sht3xRead() {
   if (timeWait(5000, 1)) {
-    int newTemp = sht35.readTemperature();
-    byte newHum  = sht35.readHumidity();
-    // ---------- TEMP ----------
-if (newTemp >= 0 && newTemp <= 45 &&
-    abs(newTemp - temperature) <= 3) {
+    int newTemp = sht31.readTemperature();
+    byte newHum  = sht31.readHumidity();
+    if (!isnan(newTemp) && newTemp >= -5 && newTemp <= 55) {
+      temperature = newTemp;
+    }
 
-  if (newTemp > temperature + 1)
-    temperature += 0.3;
-  else if (newTemp < temperature - 1)
-    temperature -= 0.3;
-  else
-    temperature = newTemp;
-}
+    if (!isnan(newHum) && newHum >= 3 && newHum <= 100) {
+      humidity = newHum;
+    }
 
-// ---------- HUM ----------
-if (newHum >= 0 && newHum <= 100 &&
-    abs(newHum - humidity) <= 5) {
-
-  if (newHum > humidity + 1)
-    humidity += 1;
-  else if (newHum < humidity - 1)
-    humidity -= 1;
-  else
-    humidity = newHum;
-}
-    // temperature = sht31.readTemperature();
-    // humidity    = sht31.readHumidity();
-    sensorRead = millis();
+  // temperature = sht31.readTemperature();
+  // humidity    = sht31.readHumidity();
+  sensorRead = millis();
   }
 }
 
