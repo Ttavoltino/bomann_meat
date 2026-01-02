@@ -31,7 +31,7 @@ unsigned long compressorRun;
 unsigned long sensorRead;
 unsigned long wifiCheck;
 unsigned long lastReconnectAttempt;
-byte temperature;
+int temperature;
 byte humidity;
 byte topfanSpeed = 35;
 
@@ -117,8 +117,33 @@ void loop() {
 
 void sht3xRead() {
   if (timeWait(5000, 1)) {
-    temperature = sht31.readTemperature();
-    humidity    = sht31.readHumidity();
+    int newTemp = sht35.readTemperature();
+    byte newHum  = sht35.readHumidity();
+    // ---------- TEMP ----------
+if (newTemp >= 0 && newTemp <= 45 &&
+    abs(newTemp - temperature) <= 3) {
+
+  if (newTemp > temperature + 1)
+    temperature += 0.3;
+  else if (newTemp < temperature - 1)
+    temperature -= 0.3;
+  else
+    temperature = newTemp;
+}
+
+// ---------- HUM ----------
+if (newHum >= 0 && newHum <= 100 &&
+    abs(newHum - humidity) <= 5) {
+
+  if (newHum > humidity + 1)
+    humidity += 1;
+  else if (newHum < humidity - 1)
+    humidity -= 1;
+  else
+    humidity = newHum;
+}
+    // temperature = sht31.readTemperature();
+    // humidity    = sht31.readHumidity();
     sensorRead = millis();
   }
 }
