@@ -64,8 +64,8 @@ const byte topFanPin          = 14;
 
 // === Fan timing ===
 unsigned long previousMillisCircFan;
-const unsigned long intervalOn  = 300000;
-const unsigned long intervalOff = 900000;
+const unsigned long intervalOn  = 30000;
+const unsigned long intervalOff = 90000;
 
 // =======================================================
 // SETUP
@@ -124,22 +124,24 @@ void loop() {
 
 void sht3xRead() {
   static unsigned long lastRead = 0;
-  if (millis() - lastRead < 5000) return;
-  lastRead = millis();
+  if ((millis() - lastRead) > 5000){
+    lastRead = millis();
 
-  float t = sht31.readTemperature();
-  float h = sht31.readHumidity();
+    float t = sht31.readTemperature();
+    float h = sht31.readHumidity();
 
-  if (!isnan(t) && t >= -10 && t <= 60) temperature = (int)t;
-  if (!isnan(h) && h >= 0 && h <= 100) humidity = (byte)h;
+    if (!isnan(t) && t >= -10 && t <= 60) temperature = (int)t;
+    if (!isnan(h) && h >= 0 && h <= 100) humidity = (byte)h;
+  }
 }
 
 void checkWiFi() {
   static unsigned long lastCheck = 0;
-  if (millis() - lastCheck < 30000) return;
-  lastCheck = millis();
+  if ((millis() - lastCheck ) > 30000){
+    lastCheck = millis();
 
-  if (WiFi.status() != WL_CONNECTED) connectToWiFi();
+    if (WiFi.status() != WL_CONNECTED) connectToWiFi();
+  }
 }
 
 void tempCtrl() {
@@ -166,49 +168,52 @@ void tempCtrl() {
 }
 
 void humCtrl() {
-  if (!allowHumidityControl || tempSet < 9)  dehumifider = false; humifider = false; return;
+  if (allowHumidityControl || tempSet < 9){
 
-  if (humidity >= humSet + 3) {
-    compressor(true);
-    dehumifider = true;
-  }
-  else if (humidity <= humSet - 3) {
-    compressor(false);
-    dehumifider = false;
-  }
+    if (humidity >= humSet + 3) {
+      compressor(true);
+      dehumifider = true;
+    }
+    else if (humidity <= humSet - 3) {
+      compressor(false);
+      dehumifider = false;
+    }
 
-  if (humidity <= humSet - 5) {
-    ledcWrite(cFanPin, 254);
-    fanBoostActive = true;
-    humifider = true;
-  }
-  else if (humidity >= humSet && fanBoostActive) {
-    ledcWrite(cFanPin, 0);
-    fanBoostActive = false;
-    humifider = false;
+    if (humidity <= humSet - 5) {
+      ledcWrite(cFanPin, 254);
+      fanBoostActive = true;
+      humifider = true;
+    }
+    else if (humidity >= humSet && fanBoostActive) {
+      ledcWrite(cFanPin, 0);
+      fanBoostActive = false;
+      humifider = false;
+     }
+  } else {
+      humifider = false;
+      dehumifider = false;
   }
 }
 
 void compressor(bool state) {
   static unsigned long lastStop = 0;
-
   if (state) {
-    if (millis() - lastStop < 180000) compressorActive = false; return; // 3 мин защита
-    digitalWrite(compPin, HIGH);
-    ledcWrite(cFanPin, 150);
-    compressorActive = true;
-  } else {
-    digitalWrite(compPin, LOW);
-    if (compressorActive) {
-      compressorActive = false;
-      lastStop = millis();
+      if ((millis() - lastStop ) > 180000) { // 3 мин защита
+      digitalWrite(compPin, HIGH);
+      ledcWrite(cFanPin, 150);
+      compressorActive = true;
+    } else {
+      digitalWrite(compPin, LOW);
+      if (compressorActive) {
+        compressorActive = false;
+        lastStop = millis();
+      }
     }
   }
 }
 
 void circFan() {
-  unsigned long now = millis();
-
+  static unsigned long now = 0;
   if (fanIsOn) {
     if ((now - previousMillisCircFan >= intervalOn)) {
       fanIsOn = false;
@@ -284,15 +289,16 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
 }
 
 void reconnectMQTT() {
-  static unsigned long lastTry = 0;
   if (client.connected()) return;
-  if (millis() - lastTry < 3000) return;
-  lastTry = millis();
+    static unsigned long lastTry = 0;
+    if ((millis() - lastTry ) > 3000){
+      lastTry = millis();
 
-  if (client.connect(MQTT_DEVICE_NAME, MQTT_USER, MQTT_PASSWORD)) {
-    client.subscribe(set_temp_topic);
-    client.subscribe(set_hum_topic);
-    client.subscribe(set_topfanspeed_topic);
+      if (client.connect(MQTT_DEVICE_NAME, MQTT_USER, MQTT_PASSWORD)) {
+        client.subscribe(set_temp_topic);
+        client.subscribe(set_hum_topic);
+        client.subscribe(set_topfanspeed_topic);
+      }
   }
 }
 
