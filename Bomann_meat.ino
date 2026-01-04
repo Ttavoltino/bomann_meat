@@ -197,17 +197,23 @@ void humCtrl() {
 
 void compressor(bool state) {
   static unsigned long lastStop = 0;
-  if (state) {
-      if ((millis() - lastStop ) > 180000) { // 3 мин защита
-      digitalWrite(compPin, HIGH);
-      ledcWrite(cFanPin, 150);
-      compressorActive = true;
+  if ((millis() - lastStop ) > 180000) {
+      if (state) { 
+        digitalWrite(compPin, HIGH);
+        ledcWrite(cFanPin, 150);
+        compressorActive = true;
     } else {
-      digitalWrite(compPin, LOW);
-      if (compressorActive) {
-        compressorActive = false;
-        lastStop = millis();
+        digitalWrite(compPin, LOW);
+        if (compressorActive) {
+          compressorActive = false;
+          ledcWrite(cFanPin, 0);
+          lastStop = millis();
       }
+    }
+  } else {
+    if (compressorActive) {
+    compressorActive = false;
+    ledcWrite(cFanPin, 0);
     }
   }
 }
