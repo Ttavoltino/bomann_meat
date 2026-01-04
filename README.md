@@ -30,4 +30,4 @@ dc to dc Convertor който се настройва с потенциомет�
 1. `Adafruit_SHT31.h` 
 
 ---
-Създадено от [Мартин Атанасов](https://github.com/Ttavoltino/aged_meat)
+Създадено от [Мартин Атанасов](https://github.com/Ttavoltino/bomann_meat)
