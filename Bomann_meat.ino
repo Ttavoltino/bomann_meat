@@ -64,8 +64,8 @@ const byte topFanPin          = 14;
 
 // === Fan timing ===
 unsigned long previousMillisCircFan;
-const unsigned long intervalOn  = 30000;
-const unsigned long intervalOff = 90000;
+const unsigned long intervalOn  = 300000;
+const unsigned long intervalOff = 900000;
 
 // =======================================================
 // SETUP
@@ -79,14 +79,14 @@ void setup() {
   Serial.begin(115200);
   delay(500);
 
+  topFanSpd = map(topfanSpeed, 5, 100, 14, 254);
+
   // PWM (ESP32 core 3.x)
   ledcAttach(topFanPin, 25000, 8);
   ledcAttach(cFanPin, 25000, 8);
-  ledcWrite(topFanPin, 0);
+  ledcWrite(topFanPin, topFanSpd);
   ledcWrite(cFanPin, 0);
 
-  topFanSpd = map(topfanSpeed, 5, 100, 14, 254);
-  ledcWrite(topFanPin, topFanSpd);
   previousMillisCircFan = 0;
 
 
