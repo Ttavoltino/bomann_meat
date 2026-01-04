@@ -71,14 +71,13 @@ const unsigned long intervalOff = 90000;
 // SETUP
 // =======================================================
 void setup() {
-
-  Serial.begin(115200);
-  delay(500);
-
   pinMode(compPin, OUTPUT);
   pinMode(heaterPin, OUTPUT);
   digitalWrite(compPin, LOW);
   digitalWrite(heaterPin, LOW);
+
+  Serial.begin(115200);
+  delay(500);
 
   // PWM (ESP32 core 3.x)
   ledcAttach(topFanPin, 25000, 8);
@@ -88,7 +87,7 @@ void setup() {
 
   topFanSpd = map(topfanSpeed, 5, 100, 14, 254);
   ledcWrite(topFanPin, topFanSpd);
-  previousMillisCircFan = millis();
+  previousMillisCircFan = 0;
 
 
   sht31.begin(0x44);
@@ -219,15 +218,15 @@ void compressor(bool state) {
 }
 
 void circFan() {
-  static unsigned long now = 0;
+  unsigned long now = millis();
   if (fanIsOn) {
-    if ((now - previousMillisCircFan >= intervalOn)) {
+    if ((now - previousMillisCircFan) > intervalOn) {
       fanIsOn = false;
       previousMillisCircFan = now;
       ledcWrite(topFanPin, 0);
     }
   } else {
-    if ((now - previousMillisCircFan >= intervalOff)) {
+    if ((now - previousMillisCircFan) > intervalOff) {
       fanIsOn = true;
       previousMillisCircFan = now;
       ledcWrite(topFanPin, topFanSpd);
