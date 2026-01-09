@@ -144,14 +144,19 @@ void checkWiFi() {
 }
 
 void tempCtrl() {
+  static bool chk = false;
 
   if (temperature >= tempSet + 2) {
     compressor(true);
+    chk = true ;
     allowHumidityControl = false;
     tempControl = true;
   }
   else if (temperature <= tempSet) {
-    compressor(false);
+    if (chk){
+      compressor(false);
+      chk = false ;
+    }
     allowHumidityControl = true;
     tempControl = false;
   }
