@@ -60,7 +60,8 @@ bool lastCompressorActive     = false;
 const byte heaterPin          = 4;
 const byte compPin            = 26;
 const byte cFanPin            = 27;
-const byte topFanPin          = 14;
+const byte circFanPin          = 14;
+const byte heatFanPin          = 25;
 
 // === Fan timing ===
 unsigned long previousMillisCircFan;
@@ -72,8 +73,8 @@ const unsigned long intervalOff = 900000;
 // =======================================================
 void setup() {
   pinMode(compPin, OUTPUT);
-  pinMode(heaterPin, OUTPUT);
   digitalWrite(compPin, LOW);
+  pinMode(heaterPin, OUTPUT);
   digitalWrite(heaterPin, LOW);
 
   Serial.begin(115200);
@@ -82,10 +83,12 @@ void setup() {
   topFanSpd = map(topfanSpeed, 5, 100, 14, 254);
 
   // PWM (ESP32 core 3.x)
-  ledcAttach(topFanPin, 25000, 8);
+  ledcAttach(circFanPin, 25000, 8);
   ledcAttach(cFanPin, 25000, 8);
-  ledcWrite(topFanPin, topFanSpd);
+  ledcAttach(heatFanPin, 25000, 8);
+  ledcWrite(circFanPin, topFanSpd);
   ledcWrite(cFanPin, 0);
+  ledcWrite(heatFanPin, 0);
 
   previousMillisCircFan = 0;
 
@@ -163,10 +166,12 @@ void tempCtrl() {
 
   if (temperature <= tempSet - 2) {
     digitalWrite(heaterPin, HIGH);
+    ledcWrite(heatFanPin, 30);
     heatCtrl = true;
   }
   else if (temperature >= tempSet) {
     digitalWrite(heaterPin, LOW);
+    ledcWrite(heatFanPin, 0);
     heatCtrl = false;
   }
 }
@@ -228,13 +233,13 @@ void circFan() {
     if ((now - previousMillisCircFan) > intervalOn) {
       fanIsOn = false;
       previousMillisCircFan = now;
-      ledcWrite(topFanPin, 0);
+      ledcWrite(circFanPin, 0);
     }
   } else {
     if ((now - previousMillisCircFan) > intervalOff) {
       fanIsOn = true;
       previousMillisCircFan = now;
-      ledcWrite(topFanPin, topFanSpd);
+      ledcWrite(circFanPin, topFanSpd);
     }
   }
 }
