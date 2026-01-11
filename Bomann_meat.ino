@@ -33,7 +33,7 @@ byte humidity                 = 0;
 byte tempSet                  = 13;
 byte humSet                   = 75;
 byte topfanSpeed              = 40;
-byte topFanSpd                = 0;
+//byte topFanSpd                = 0;
 
 // === States ===
 bool compressorActive         = false;
@@ -55,6 +55,7 @@ bool lastDehumifider          = false;
 bool lastHumifider            = false;
 bool lastTempcontrol          = false;
 bool lastCompressorActive     = false;
+bool onlyFridge               = false;
 
 // === Pins ===
 const byte heaterPin          = 4;
@@ -80,13 +81,13 @@ void setup() {
   Serial.begin(115200);
   delay(500);
 
-  topFanSpd = map(topfanSpeed, 5, 100, 14, 254);
+  //topFanSpd = map(topfanSpeed, 5, 100, 14, 254);
 
   // PWM (ESP32 core 3.x)
   ledcAttach(circFanPin, 25000, 8);
   ledcAttach(cFanPin, 25000, 8);
   ledcAttach(heatFanPin, 25000, 8);
-  ledcWrite(circFanPin, topFanSpd);
+  ledcWrite(circFanPin, /*topFanSpd*/ 40);
   ledcWrite(cFanPin, 0);
   ledcWrite(heatFanPin, 0);
 
@@ -107,7 +108,13 @@ void setup() {
 // =======================================================
 void loop() {
 
-  topFanSpd = map(topfanSpeed, 5, 100, 14, 254);
+  //topFanSpd = map(topfanSpeed, 5, 100, 14, 254);
+  if (tempSet < 9){
+    onlyFridge = true;
+    ledcWrite(heatFanPin, 75);
+  } else {
+    onlyFridge = false;
+  }
 
   if (!client.connected()) reconnectMQTT();
   else client.loop();
@@ -166,18 +173,18 @@ void tempCtrl() {
 
   if (temperature <= tempSet - 2) {
     digitalWrite(heaterPin, HIGH);
-    ledcWrite(heatFanPin, 30);
+    if (!onlyFridge)ledcWrite(heatFanPin, 30);
     heatCtrl = true;
   }
   else if (temperature >= tempSet) {
     digitalWrite(heaterPin, LOW);
-    ledcWrite(heatFanPin, 0);
+    if (!onlyFridge)ledcWrite(heatFanPin, 0);
     heatCtrl = false;
   }
 }
 
 void humCtrl() {
-  if (allowHumidityControl || tempSet < 9){
+  if (allowHumidityControl || !onlyFridge){
 
     if (humidity >= humSet + 3) {
       compressor(true);
@@ -228,6 +235,8 @@ void compressor(bool state) {
 }
 
 void circFan() {
+if (onlyFridge) return;
+
   unsigned long now = millis();
   if (fanIsOn) {
     if ((now - previousMillisCircFan) > intervalOn) {
@@ -239,7 +248,7 @@ void circFan() {
     if ((now - previousMillisCircFan) > intervalOff) {
       fanIsOn = true;
       previousMillisCircFan = now;
-      ledcWrite(circFanPin, topFanSpd);
+      ledcWrite(circFanPin, /*topFanSpd*/42);
     }
   }
 }
@@ -300,7 +309,7 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
     
   if (String(topic) == set_hum_topic) humSet = constrain(msg.toInt(), 50, 95); Serial.print("New Hum Set: "); Serial.println(humSet);
 
-  if (String(topic) == set_topfanspeed_topic) topfanSpeed = constrain(msg.toInt(), 5, 100); Serial.print("New Top Fan Speed: "); Serial.println(topfanSpeed);
+  //if (String(topic) == set_topfanspeed_topic) topfanSpeed = constrain(msg.toInt(), 5, 100); Serial.print("New Top Fan Speed: "); Serial.println(topfanSpeed);
 }
 
 void reconnectMQTT() {
