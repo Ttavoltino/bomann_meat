@@ -184,7 +184,7 @@ void tempCtrl() {
 }
 
 void humCtrl() {
-  if (allowHumidityControl || !onlyFridge){
+  if (allowHumidityControl && !onlyFridge){
 
     if (humidity >= humSet + 3) {
       compressor(true);
