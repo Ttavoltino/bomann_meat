@@ -31,3 +31,4 @@ dc to dc Convertor който се настройва с потенциомет�
 
 ---
 Създадено от [Мартин Атанасов](https://github.com/Ttavoltino/bomann_meat)
+![Изглед в Home Assistant](Images/Bomann_HA-Screen.jpg)
