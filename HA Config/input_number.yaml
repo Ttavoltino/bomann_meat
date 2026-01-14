@@ -1,0 +1,23 @@
+bomann_set_temperature:
+  name: "set_temp"
+  min: 0
+  max: 22
+  step: 1
+  unit_of_measurement: "°C"
+  mode: slider
+
+bomann_set_humidity:
+  name: "set_hum"
+  min: 50
+  max: 95
+  step: 1
+  unit_of_measurement: "%"
+  mode: slider
+
+bomann_set_topfanspeed:
+  name: "set_topfan"
+  min: 5
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  mode: slider

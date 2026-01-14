@@ -1,0 +1,45 @@
+  - alias: "send_set_temp"
+    trigger:
+      - platform: state
+        entity_id: input_number.bomann_set_temperature
+    action:
+      - service: mqtt.publish
+        data:
+          topic: "sushilna/set/temperature"
+          payload: "{{ trigger.to_state.state }}"
+
+  - alias: "send_set_humy"
+    trigger:
+      - platform: state
+        entity_id: input_number.bomann_set_humidity
+    action:
+      - service: mqtt.publish
+        data:
+          topic: "sushilna/set/humidity"
+          payload: "{{ trigger.to_state.state }}"
+
+  - alias: "send_set_topfan_speed"
+    trigger:
+      - platform: state
+        entity_id: input_number.bomann_set_topfanspeed
+    action:
+      - service: mqtt.publish
+        data:
+          topic: "sushilna/set/topfanspeed"
+          payload: "{{ trigger.to_state.state }}"
+
+    action:
+      - service: mqtt.publish
+        data:
+          topic: sushilna/set/temperature
+          payload: "{{ states('input_number.bomann_set_temperature') }}"
+
+      - service: mqtt.publish
+        data:
+          topic: sushilna/set/humidity
+          payload: "{{ states('input_number.bomann_set_humidity') }}"
+
+      - service: mqtt.publish
+        data:
+          topic: sushilna/set/topfanspeed
+          payload: "{{ states('input_number.bomann_set_topfanspeed') }}"

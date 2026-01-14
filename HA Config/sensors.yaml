@@ -1,0 +1,15 @@
+- platform: statistics
+  name: "temp_hist_24h"
+  entity_id: sensor.bomann_temperature
+  unique_id: bomann_temp_sredna
+  max_age:
+    hours: 12
+  state_characteristic: mean
+
+- platform: statistics
+  name: "hum_hist_24h"
+  entity_id: sensor.bomann_humidity
+  unique_id: bomann_hum_sredna
+  max_age:
+    hours: 12
+  state_characteristic: mean

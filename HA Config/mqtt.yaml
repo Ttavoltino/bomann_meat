@@ -1,0 +1,109 @@
+sensor:
+  - name: "Temperature"
+    state_topic: "sushilna/temperature"
+    unique_id: bomann_temp
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    force_update: true
+
+  - name: "Temperature_Status"
+    state_topic: "sushilna/status/temperature"
+    unique_id: bomann_temp_setup
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    force_update: true
+
+  - name: "Humidity_Status"
+    state_topic: "sushilna/status/humidity"
+    unique_id: bomann_humy_setup
+    unit_of_measurement: "%"
+    device_class: humidity
+    state_class: measurement
+    force_update: true
+
+  - name: "Humidity"
+    state_topic: "sushilna/humidity"
+    unique_id: bomann_humy
+    unit_of_measurement: "%"
+    device_class: humidity
+    state_class: measurement
+    force_update: true
+
+number:
+  - name: "Set_up_temp"
+    unique_id: bomann_temp_set
+    command_topic: "sushilna/set/temperature"
+    min: 0
+    max: 22
+    step: 1
+    unit_of_measurement: "°C"
+    mode: slider
+
+  - name: "set_up_hum"
+    unique_id: bomann_hum_set
+    command_topic: "sushilna/set/humidity"
+    min: 0
+    max: 100
+    step: 1
+    unit_of_measurement: "%"
+    mode: slider
+
+  - name: "Задаване скорост на вентилатор циркулация"
+    unique_id: bomann_topfanspeed_set
+    command_topic: "sushilna/set/topfanspeed"
+    min: 5
+    max: 100
+    step: 1
+    unit_of_measurement: "%"
+    mode: slider
+
+binary_sensor:
+  - name: "Compressor_status"
+    state_topic: "sushilna/compressor"
+    payload_on: "1"  # Стойността, която MQTT топикът изпраща за ВКЛЮЧЕНО
+    payload_off: "0" # Стойността, която MQTT топикът изпраща за ИЗКЛЮЧЕНО
+    device_class: "running" # Показва икона като лампичка/статус
+    qos: 0
+    unique_id: "bomann_compressor_status"
+
+  - name: "humifider_status"
+    state_topic: "sushilna/humifider"
+    payload_on: "1"  # Стойността, която MQTT топикът изпраща за ВКЛЮЧЕНО
+    payload_off: "0" # Стойността, която MQTT топикът изпраща за ИЗКЛЮЧЕНО
+    device_class: "running" # Показва икона като лампичка/статус
+    qos: 0
+    unique_id: "bomann_humyfider_status"
+
+  - name: "dehumifider_status"
+    state_topic: "sushilna/dehumifider"
+    payload_on: "1"  # Стойността, която MQTT топикът изпраща за ВКЛЮЧЕНО
+    payload_off: "0" # Стойността, която MQTT топикът изпраща за ИЗКЛЮЧЕНО
+    device_class: "running" # Показва икона като лампичка/статус
+    qos: 0
+    unique_id: "bomann_dehumyfider_status"
+
+  - name: "cooling_status"
+    state_topic: "sushilna/temp_control"
+    payload_on: "1"  # Стойността, която MQTT топикът изпраща за ВКЛЮЧЕНО
+    payload_off: "0" # Стойността, която MQTT топикът изпраща за ИЗКЛЮЧЕНО
+    device_class: "running" # Показва икона като лампичка/статус
+    qos: 0
+    unique_id: "bomann_tempctrl_status"
+
+  - name: "heater_element_status"
+    state_topic: "sushilna/status/heater"
+    payload_on: "1"  # Стойността, която MQTT топикът изпраща за ВКЛЮЧЕНО
+    payload_off: "0" # Стойността, която MQTT топикът изпраща за ИЗКЛЮЧЕНО
+    device_class: "running" # Показва икона като лампичка/статус
+    qos: 0
+    unique_id: "bomann_heat_ctrl_status"
+
+  - name: "Offline/Online"
+    state_topic: "sushilna/status/"
+    payload_on: "online"
+    payload_off: "offline"
+    device_class: connectivity
+    unique_id: "bomann_connection_status"
+    off_delay: 0
