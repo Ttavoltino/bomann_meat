@@ -1,0 +1,260 @@
+views:
+  - type: masonry
+    background:
+      opacity: 10
+      alignment: center
+      size: cover
+      repeat: repeat
+      attachment: fixed
+    path: sushilnia
+    icon: mdi:air-filter
+    title: 'Сушилня '
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: gauge
+                name: Температура
+                unit: °C
+                max: 25
+                needle: true
+                severity:
+                  green: 10
+                  yellow: 17
+                  red: 22
+                min: 8
+                entity: sensor.bomann_temperature
+              - type: gauge
+                name: Влажност
+                severity:
+                  green: 70
+                  yellow: 85
+                  red: 90
+                unit: '%'
+                needle: true
+                min: 65
+                max: 95
+                entity: sensor.bomann_humidity
+        title: 'Параметри '
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            badge_color: ''
+            color: |
+              {% if is_state(entity, 'on') %} green {% else %} grey {% endif %}
+            vertical: true
+            features_position: bottom
+            icon: mdi:water-percent-alert
+            entity: binary_sensor.dehumifider_status
+          - type: custom:mushroom-template-card
+            color: |
+              {% if is_state(entity, 'on') %} cyan {% else %} grey {% endif %}
+            vertical: true
+            features_position: bottom
+            icon: mdi:waves-arrow-up
+            entity: binary_sensor.humifider_status
+          - type: custom:mushroom-template-card
+            color: |
+              {% if is_state(entity, 'on') %} blue{% else %} grey {% endif %}
+            vertical: true
+            features_position: bottom
+            icon: mdi:snowflake
+            entity: binary_sensor.cooling_status
+          - type: custom:mushroom-template-card
+            icon: mdi:radiator
+            color: |
+              {% if is_state(entity, 'on') %} red {% else %} grey {% endif %}
+            vertical: true
+            features_position: bottom
+            entity: binary_sensor.heater_element_status
+          - type: custom:mushroom-template-card
+            color: |
+              {% if is_state(entity, 'on') %} yellow {% else %} grey {% endif %}
+            vertical: true
+            features_position: bottom
+            icon: mdi:engine
+            entity: binary_sensor.compressor_status
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.hum_hist_24h
+                name: Влажност
+              - entity: sensor.temp_hist_24h
+                name: Температура
+            title: 12 часа
+          - type: entities
+            entities:
+              - entity: input_number.bomann_set_temperature
+                name: Температура
+              - entity: input_number.bomann_set_humidity
+                name: Влажност
+            title: 'Контрол '
+  - path: default_view
+    title: Home
+    cards:
+      - title: Перник
+        type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: gauge
+                name: Температура
+                max: 40
+                severity:
+                  green: 18
+                  yellow: 27
+                  red: 31
+                entity: sensor.vnshen_th_temperature
+                unit: °C
+                min: -20
+              - type: gauge
+                name: Влажност
+                min: 0
+                max: 100
+                severity:
+                  green: 45
+                  yellow: 71
+                  red: 72
+                entity: sensor.vnshen_th_humidity
+                unit: '%'
+      - type: horizontal-stack
+        cards:
+          - type: gauge
+            entity: sensor.spalnia_th_temperature
+            name: Температура
+            severity:
+              green: 19.5
+              yellow: 24
+              red: 26
+            needle: false
+            unit: °C
+            min: 10
+            max: 30
+          - type: gauge
+            entity: sensor.spalnia_th_humidity
+            name: Влажност
+            min: 5
+            max: 100
+            severity:
+              green: 35
+              yellow: 60
+              red: 61
+            unit: '%'
+        title: 'Спалня '
+      - type: entities
+        entities:
+          - entity: sensor.kantar_xiaomi_weight
+        title: Кантар Xiaomi
+      - type: entity
+        entity: sensor.vnshen_th_battery_state
+        name: 'Батерия '
+  - type: sections
+    background:
+      opacity: 10
+      alignment: center
+      size: cover
+      repeat: repeat
+      attachment: fixed
+    icon: mdi:air-filter
+    title: 'Сушилня '
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: gauge
+                name: Температура
+                entity: sensor.sushilnia_temperatura
+                unit: °C
+                max: 25
+                needle: true
+                severity:
+                  green: 10
+                  yellow: 17
+                  red: 22
+                min: 8
+              - type: gauge
+                name: Влажност
+                severity:
+                  green: 70
+                  yellow: 85
+                  red: 90
+                unit: '%'
+                entity: sensor.sushilnia_vlazhnost
+                needle: true
+                min: 65
+                max: 95
+        title: 'Параметри '
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            entity: binary_sensor.bomann_status_dehumyfider
+            badge_color: ''
+            color: |
+              {% if is_state(entity, 'on') %} green {% else %} grey {% endif %}
+            vertical: true
+            features_position: bottom
+            icon: mdi:water-percent-alert
+          - type: custom:mushroom-template-card
+            entity: binary_sensor.ovlazhniavane_status
+            color: |
+              {% if is_state(entity, 'on') %} blue {% else %} grey {% endif %}
+            vertical: true
+            features_position: bottom
+            icon: mdi:waves-arrow-up
+          - type: custom:mushroom-template-card
+            entity: sensor.sushilnia_zadadena_temperatura
+            color: |
+              {% if is_state(entity, 'on') %} red {% else %} grey {% endif %}
+            vertical: true
+            features_position: bottom
+            icon: mdi:snowflake
+          - type: custom:mushroom-template-card
+            entity: binary_sensor.bomann_heater
+            icon: mdi:radiator
+            color: |
+              {% if is_state(entity, 'on') %} orange {% else %} grey {% endif %}
+            vertical: true
+            features_position: bottom
+          - type: custom:mushroom-template-card
+            entity: binary_sensor.sstoianie_na_kompresora
+            color: |
+              {% if is_state(entity, 'on') %} yellow {% else %} grey {% endif %}
+            vertical: true
+            features_position: bottom
+            icon: mdi:engine
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.sredna_vlazhnost
+                name: Влажност 12 часа
+              - entity: sensor.sushilnia_vlazhnost_2
+                name: 'Зададена влажност '
+              - entity: sensor.bomann_history_temp
+                name: Темп. 12 часа
+              - entity: sensor.sushilnia_zadadena_temperatura
+                name: 'Зададена температура '
+            title: Статус
+          - type: entities
+            entities:
+              - entity: input_number.dryer_set_temperature
+                name: Температура
+                icon: mdi:temperature-celsius
+              - entity: input_number.dryer_set_humidity
+                name: Влажност
+                icon: mdi:water-percent-alert
+              - entity: input_number.dryer_set_topfanspeed
+                name: Вентилация
+                icon: mdi:fan-chevron-up
+            title: 'Контрол '
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: New section
+    max_columns: 3
+    subview: true
+
