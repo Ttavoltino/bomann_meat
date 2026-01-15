@@ -6,55 +6,54 @@
 #include "arduino_secrets.h"
 
 // === MQTT Topics ===
-const char* temp_topic                = "sushilna/temperature";
-const char* hum_topic                 = "sushilna/humidity";
-const char* set_hum_topic             = "sushilna/set/humidity";
-const char* set_temp_topic            = "sushilna/set/temperature";
-const char* temp_status_topic         = "sushilna/status/temperature";
-const char* hum_status_topic          = "sushilna/status/humidity";
-const char* set_topfanspeed_topic     = "sushilna/set/topfanspeed";
-const char* compressor_status_topic   = "sushilna/compressor";
-const char* humifider_status_topic    = "sushilna/humifider";
-const char* dehumifider_status_topic  = "sushilna/dehumifider";
-const char* tempctr_status_topic      = "sushilna/temp_control";
-const char* heat_status_topic         = "sushilna/status/heater";
+const char* temp_topic = "sushilna/temperature";
+const char* hum_topic  = "sushilna/humidity";
+const char* set_hum_topic = "sushilna/set/humidity";
+const char* set_temp_topic = "sushilna/set/temperature";
+const char* temp_status_topic = "sushilna/status/temperature";
+const char* hum_status_topic = "sushilna/status/humidity";
+const char* set_topfanspeed_topic = "sushilna/set/topfanspeed";
+const char* compressor_status_topic = "sushilna/compressor";
+const char* humifider_status_topic = "sushilna/humifider";
+const char* dehumifider_status_topic = "sushilna/dehumifider";
+const char* tempctr_status_topic = "sushilna/temp_control";
+const char* heat_status_topic = "sushilna/status/heater";
 
 // === WiFi / MQTT ===
 WiFiClient espClient;
 PubSubClient client(espClient);
 
 // === Sensor ===
-Adafruit_SHT31 sht31          = Adafruit_SHT31();
+Adafruit_SHT31 sht31 = Adafruit_SHT31();
 
 // === Variables ===
-int temperature               = 0;
-byte humidity                 = 0;
+int temperature = 0;
+byte humidity = 0;
 
-byte tempSet                  = 13;
-byte humSet                   = 75;
-byte topfanSpeed              = 40;
+byte tempSet = 13;
+byte humSet = 75;
+byte topfanSpeed = 40;
 //byte topFanSpd                = 0;
 
 // === States ===
-bool compressorActive         = false;
-bool allowHumidityControl     = true;
-bool fanBoostActive           = true;
-bool dehumifider              = false;
-bool humifider                = false;
-bool tempControl              = false;
-bool heatCtrl                 = false;
-bool fanIsOn                  = true;
-bool onlyFridge               = false;
+bool compressorActive = false;
+bool allowHumidityControl = true;
+bool fanBoostActive = true;
+bool dehumifider = false;
+bool humifider = false;
+bool tempControl = false;
+bool heatCtrl = false;
+bool fanIsOn = true;
+bool onlyFridge = false;
 
 // === Pins ===
-const byte heaterPin          = 4;
-const byte compPin            = 26;
-const byte cFanPin            = 27;
-const byte circFanPin          = 14;
-const byte heatFanPin          = 25;
+const byte heaterPin = 4;
+const byte compPin = 26;
+const byte cFanPin = 27;
+const byte circFanPin = 14;
+const byte heatFanPin = 25;
 
 // === Fan timing ===
-unsigned long previousMillisCircFan;
 const unsigned long intervalOn  = 300000;
 const unsigned long intervalOff = 900000;
 
@@ -225,7 +224,7 @@ void compressor(bool state) {
 
 void circFan() {
   if (onlyFridge) return;
-
+  static unsigned long previousMillisCircFan;
   unsigned long now = millis();
   if (fanIsOn) {
     if ((now - previousMillisCircFan) > intervalOn) {
@@ -243,6 +242,7 @@ void circFan() {
 }
 
 void publishData() {
+
   // === Last published ===
   static int lastTemp = -100;
   static byte lastHum = 150;
