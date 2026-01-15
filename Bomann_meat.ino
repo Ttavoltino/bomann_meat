@@ -33,7 +33,7 @@ byte humidity = 0;
 byte tempSet = 13;
 byte humSet = 75;
 byte topfanSpeed = 40;
-//byte topFanSpd                = 0;
+//byte topFanSpd = 0;
 
 // === States ===
 bool compressorActive = false;
@@ -78,9 +78,6 @@ void setup() {
   ledcWrite(circFanPin, /*topFanSpd*/ 40);
   ledcWrite(cFanPin, 0);
   ledcWrite(heatFanPin, 0);
-
-  previousMillisCircFan = 0;
-
 
   sht31.begin(0x44);
 
@@ -224,7 +221,7 @@ void compressor(bool state) {
 
 void circFan() {
   if (onlyFridge) return;
-  static unsigned long previousMillisCircFan;
+  static unsigned long previousMillisCircFan = 0;
   unsigned long now = millis();
   if (fanIsOn) {
     if ((now - previousMillisCircFan) > intervalOn) {
