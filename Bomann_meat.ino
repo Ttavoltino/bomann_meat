@@ -44,17 +44,6 @@ bool humifider                = false;
 bool tempControl              = false;
 bool heatCtrl                 = false;
 bool fanIsOn                  = true;
-
-// === Last published ===
-int lastTemp                  = -100;
-int lastTempSet               = -100;
-byte lastHum                  = 150;
-byte lastHumSet               = 150;
-bool lastHeatcontrol          = false;
-bool lastDehumifider          = false;
-bool lastHumifider            = false;
-bool lastTempcontrol          = false;
-bool lastCompressorActive     = false;
 bool onlyFridge               = false;
 
 // === Pins ===
@@ -235,7 +224,7 @@ void compressor(bool state) {
 }
 
 void circFan() {
-if (onlyFridge) return;
+  if (onlyFridge) return;
 
   unsigned long now = millis();
   if (fanIsOn) {
@@ -254,6 +243,16 @@ if (onlyFridge) return;
 }
 
 void publishData() {
+  // === Last published ===
+  static int lastTemp = -100;
+  static byte lastHum = 150;
+  static int lastTempSet  = -100;
+  static byte lastHumSet  = 150;
+  static bool lastHeatcontrol = false;
+  static bool lastDehumifider = false;
+  static bool lastHumifider = false;
+  static bool lastTempcontrol = false;
+  static bool lastCompressorActive  = false;
 
   if (temperature != lastTemp) {
     client.publish(temp_topic, String(temperature).c_str(), true);
