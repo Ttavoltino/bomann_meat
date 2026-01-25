@@ -79,18 +79,26 @@ views:
         cards:
           - type: entities
             entities:
+              - entity: sensor.vlazhnsot_status
+                name: Зададена
               - entity: sensor.hum_hist_24h
-                name: Влажност
+                name: Средна
+                icon: mdi:water-percent-alert
+              - entity: sensor.okhlazhdane
+                name: Зададена
               - entity: sensor.temp_hist_24h
-                name: Температура
-            title: 12 часа
-          - type: entities
-            entities:
-              - entity: input_number.bomann_set_temperature
-                name: Температура
-              - entity: input_number.bomann_set_humidity
-                name: Влажност
-            title: 'Контрол '
+                name: Средна
+                icon: mdi:thermometer-alert
+            title: Статус
+      - type: entities
+        entities:
+          - entity: input_number.bomann_set_humidity
+            name: Влажност
+            icon: mdi:water-percent
+          - entity: input_number.bomann_set_temperature
+            name: Температура
+            icon: mdi:temperature-celsius
+        title: Параметри
   - path: default_view
     title: Home
     cards:
@@ -191,6 +199,7 @@ views:
         cards:
           - type: custom:mushroom-template-card
             entity: binary_sensor.bomann_status_dehumyfider
+            name: Обезвлажнител
             badge_color: ''
             color: |
               {% if is_state(entity, 'on') %} green {% else %} grey {% endif %}
