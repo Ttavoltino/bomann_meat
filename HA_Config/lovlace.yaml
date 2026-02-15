@@ -79,13 +79,13 @@ views:
         cards:
           - type: entities
             entities:
-              - entity: sensor.vlazhnsot_status
-                name: Зададена
+              - entity: sensor.humidity_status
+                name: Зададена Влажност
               - entity: sensor.hum_hist_24h
                 name: Средна
                 icon: mdi:water-percent-alert
-              - entity: sensor.okhlazhdane
-                name: Зададена
+              - entity: sensor.cooling
+                name: Зададена температура
               - entity: sensor.temp_hist_24h
                 name: Средна
                 icon: mdi:thermometer-alert
@@ -98,6 +98,9 @@ views:
           - entity: input_number.bomann_set_temperature
             name: Температура
             icon: mdi:temperature-celsius
+          - entity: input_number.bomann_set_topfanspeed
+            name: Циркулация
+            icon: mdi:fan
         title: Параметри
   - path: default_view
     title: Home
