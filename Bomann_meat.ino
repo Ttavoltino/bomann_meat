@@ -55,7 +55,7 @@ const byte heatFanPin = 25;
 
 // === Fan timing ===
 const unsigned long intervalOn  = 300000;
-const unsigned long intervalOff = 900000;
+const unsigned long intervalOff = 1500000;
 
 // =======================================================
 // SETUP
@@ -75,7 +75,7 @@ void setup() {
   ledcAttach(circFanPin, 25000, 8);
   ledcAttach(cFanPin, 25000, 8);
   ledcAttach(heatFanPin, 25000, 8);
-  ledcWrite(circFanPin, /*topFanSpd*/ 40);
+  ledcWrite(circFanPin, /*topFanSpd*/ 55);
   ledcWrite(cFanPin, 0);
   ledcWrite(heatFanPin, 0);
 
@@ -158,12 +158,12 @@ void tempCtrl() {
 
   if (temperature <= tempSet - 2) {
     digitalWrite(heaterPin, HIGH);
-    if (!onlyFridge)ledcWrite(heatFanPin, 30);
+    //if (!onlyFridge) {ledcWrite(heatFanPin, 30);}
     heatCtrl = true;
   }
   else if (temperature >= tempSet) {
     digitalWrite(heaterPin, LOW);
-    if (!onlyFridge)ledcWrite(heatFanPin, 0);
+    //if (!onlyFridge) {ledcWrite(heatFanPin, 0);}
     heatCtrl = false;
   }
 }
@@ -233,7 +233,7 @@ void circFan() {
     if ((now - previousMillisCircFan) > intervalOff) {
       fanIsOn = true;
       previousMillisCircFan = now;
-      ledcWrite(circFanPin, /*topFanSpd*/42);
+      ledcWrite(circFanPin, /*topFanSpd*/55);
     }
   }
 }
