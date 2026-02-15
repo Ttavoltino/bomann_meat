@@ -64,7 +64,7 @@ void setup() {
   pinMode(compPin, OUTPUT);
   digitalWrite(compPin, LOW);
   pinMode(heaterPin, OUTPUT);
-  digitalWrite(heaterPin, LOW);
+  digitalWrite(heaterPin, HIGH);
 
   Serial.begin(115200);
   delay(500);
@@ -157,12 +157,12 @@ void tempCtrl() {
   }
 
   if (temperature <= tempSet - 2) {
-    digitalWrite(heaterPin, HIGH);
+    digitalWrite(heaterPin, LOW);
     //if (!onlyFridge) {ledcWrite(heatFanPin, 30);}
     heatCtrl = true;
   }
   else if (temperature >= tempSet) {
-    digitalWrite(heaterPin, LOW);
+    digitalWrite(heaterPin, HIGH);
     //if (!onlyFridge) {ledcWrite(heatFanPin, 0);}
     heatCtrl = false;
   }
